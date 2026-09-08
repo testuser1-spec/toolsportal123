@@ -24,10 +24,11 @@ This project has two hard constraints that must never be violated:
 ## Feature Plan
 
 ### Phase 1 — Portal shell + Atkinson Cycle Visualiser
-- [ ] Portal shell: header/main/footer scaffold; theme toggle (Tailwind `class` dark-mode strategy, persisted to `localStorage`, applied pre-paint to avoid flash)
-- [ ] Tools registry + hash router (`TOOLS_REGISTRY` array, `#toolId` navigation via `hashchange`, mount/unmount lifecycle per tool) — the extensible pattern every future tool plugs into
-- [ ] Homepage view: card grid rendered from the registry (one card per tool)
-- [ ] Atkinson Cycle Visualiser tool:
+- [x] Visual direction chosen: **Blueprint Lab** — cool/technical drafting-table aesthetic. Fonts: IBM Plex Mono (labels/data) + IBM Plex Sans (body). Dark mode: navy `#0a1628` bg, faint cyan grid, cyan `#5dd9e8` accent, amber `#f2a154` secondary (expansion trace). Light mode: pale drafting-paper bg, navy ink text, matching accent hue darkened for contrast. Cards use corner-bracket accents (not rounded+left-border). Site wordmark "SCHEMA/" (placeholder, easy to rename).
+- [x] Portal shell: header/main/footer scaffold; theme toggle (Tailwind `class` dark-mode strategy, persisted to `localStorage`, applied pre-paint to avoid flash)
+- [x] Tools registry + hash router (`TOOLS_REGISTRY` array, `#toolId` navigation via `hashchange`, mount/unmount lifecycle per tool) — the extensible pattern every future tool plugs into
+- [x] Homepage view: card grid rendered from the registry (one card per tool)
+- [x] Atkinson Cycle Visualiser tool:
   - Two coupled sliders — compression ratio and expansion ratio, with expansion always ≥ compression
   - Air-standard Atkinson cycle math (isentropic compression → constant-volume heat addition → isentropic expansion → blowdown + isobaric exhaust)
   - Two `<canvas>` views (P-V diagram + piston/crank schematic) driven by one `requestAnimationFrame` loop and a shared cursor, so they stay in sync

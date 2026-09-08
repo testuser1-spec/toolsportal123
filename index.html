@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>SCHEMA/ — Tools Portal</title>
+<script>
+  (function () {
+    var stored = localStorage.getItem('theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var isDark = stored ? stored === 'dark' : prefersDark;
+    document.documentElement.classList.toggle('dark', isDark);
+  })();
+</script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  if (window.tailwind) tailwind.config = { darkMode: 'class' };
+</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --bg: #eef3f7;
+    --grid-line: rgba(10, 40, 70, 0.05);
+    --surface: #ffffff;
+    --border: #c7d7e3;
+    --text: #0a1628;
+    --text-muted: #4a6a85;
+    --accent: #0e7490;
+    --accent-2: #c2670f;
+  }
+  html.dark {
+    --bg: #0a1628;
+    --grid-line: rgba(93, 169, 214, 0.07);
+    --surface: #0f2036;
+    --border: #1c3a56;
+    --text: #e6f1fa;
+    --text-muted: #8fa8bf;
+    --accent: #5dd9e8;
+    --accent-2: #f2a154;
+  }
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+  }
+  .font-brand {
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .blueprint-grid {
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  canvas { display: block; }
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: none;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body class="min-h-screen blueprint-grid">
+
+  <header class="flex items-center justify-between px-6 sm:px-12 py-6 border-b" style="border-color: var(--border);">
+    <div class="font-brand text-xl font-bold tracking-wide">SCHEMA<span style="color: var(--accent);">/</span></div>
+    <button id="themeToggleBtn" type="button" aria-label="Toggle dark mode" aria-pressed="false"
+      class="w-10 h-10 rounded-full border flex items-center justify-center" style="border-color: var(--border);">
+      <svg id="iconSun" width="18" height="18" viewBox="0 0 24 24" fill="none" style="stroke: var(--text-muted);" stroke-width="2" stroke-linecap="round">
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.2" y1="4.2" x2="5.6" y2="5.6"></line><line x1="18.4" y1="18.4" x2="19.8" y2="19.8"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.2" y1="19.8" x2="5.6" y2="18.4"></line><line x1="18.4" y1="5.6" x2="19.8" y2="4.2"></line>
+      </svg>
+      <svg id="iconMoon" hidden width="18" height="18" viewBox="0 0 24 24" fill="none" style="stroke: var(--text-muted);" stroke-width="2" stroke-linecap="round">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main id="app-root" class="px-6 sm:px-12 py-10 max-w-5xl mx-auto">
+
+    <section id="view-home" data-view>
+      <div class="font-brand text-xs tracking-widest uppercase mb-3" style="color: var(--accent);">Tools &amp; learning artifacts</div>
+      <p class="text-sm max-w-lg mb-8" style="color: var(--text-muted);">A growing set of interactive tools built for the classroom. Open one below.</p>
+      <div id="toolCardGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-6"></div>
+    </section>
+
+    <section id="view-atkinson" data-view hidden class="pb-4">
+      <a href="#" class="font-brand text-xs" style="color: var(--text-muted);">&larr; All tools</a>
+      <h1 class="text-2xl sm:text-3xl font-semibold mt-3">Atkinson Cycle Visualiser</h1>
+      <div class="font-brand text-xs tracking-widest uppercase mt-2 mb-6" style="color: var(--accent);">Thermodynamics / Engine Cycles</div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="border" style="background-color: var(--surface); border-color: var(--border);">
+          <div class="px-4 py-3 border-b font-brand text-xs tracking-widest" style="border-color: var(--border); color: var(--text-muted);">P&ndash;V DIAGRAM</div>
+          <canvas id="pvCanvas" class="w-full" style="height: 300px;"></canvas>
+        </div>
+        <div class="border" style="background-color: var(--surface); border-color: var(--border);">
+          <div class="px-4 py-3 border-b font-brand text-xs tracking-widest" style="border-color: var(--border); color: var(--text-muted);">PISTON &amp; CRANK</div>
+          <canvas id="pistonCanvas" class="w-full" style="height: 300px;"></canvas>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 items-end">
+        <div>
+          <label for="rcSlider" class="flex justify-between font-brand text-xs mb-2" style="color: var(--text-muted);">
+            <span>COMPRESSION RATIO</span><span id="rcValue" style="color: var(--text);">9.0</span>
+          </label>
+          <input id="rcSlider" type="range" min="6" max="14" step="0.5" value="9" class="w-full">
+        </div>
+        <div>
+          <label for="reSlider" class="flex justify-between font-brand text-xs mb-2" style="color: var(--text-muted);">
+            <span>EXPANSION RATIO</span><span id="reValue" style="color: var(--text);">13.0</span>
+          </label>
+          <input id="reSlider" type="range" min="9" max="20" step="0.5" value="13" class="w-full">
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 mt-6">
+        <button id="playPauseBtn" type="button" aria-pressed="true" aria-label="Play or pause the animation"
+          class="w-10 h-10 border flex items-center justify-center" style="border-color: var(--border);">
+          <svg id="iconPause" width="14" height="14" viewBox="0 0 24 24" style="fill: var(--text);"><rect x="5" y="4" width="5" height="16"></rect><rect x="14" y="4" width="5" height="16"></rect></svg>
+          <svg id="iconPlay" hidden width="14" height="14" viewBox="0 0 24 24" style="fill: var(--text);"><path d="M6 4l14 8-14 8z"></path></svg>
+        </button>
+        <span id="playPauseLabel" class="font-brand text-xs tracking-wide" style="color: var(--text-muted);">PLAYING</span>
+      </div>
+
+      <div class="mt-6 p-6 border" style="background-color: var(--surface); border-color: var(--border);">
+        <div class="font-brand text-xs tracking-widest mb-3" style="color: var(--accent);">WHY IT MATTERS</div>
+        <p class="text-sm leading-relaxed max-w-3xl" style="color: var(--text-muted);">
+          The Atkinson cycle runs through four idealized strokes &mdash; isentropic compression, constant-volume heat addition, isentropic expansion, and exhaust. Its defining trait is an expansion stroke longer than the compression stroke, extracting more work from each combustion event than a symmetric cycle would. Compare that to the Otto cycle, where compression and expansion ratios are equal: Atkinson trades peak power for thermal efficiency, which is why it shows up in hybrid engines built to sip fuel rather than sprint.
+        </p>
+        <p class="sr-only">This tool draws an animated pressure&ndash;volume diagram and a piston-and-crank schematic of the Atkinson cycle, redrawn live as you move the compression and expansion ratio sliders.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="px-6 sm:px-12 py-5 border-t font-brand text-xs tracking-wide" style="border-color: var(--border); color: var(--text-muted);">
+    SCHEMA — A COLLECTION OF CLASSROOM TOOLS
+  </footer>
+
+<script>
+  // ---------- Theme ----------
+  function syncThemeIcons() {
+    var isDark = document.documentElement.classList.contains('dark');
+    document.getElementById('iconSun').hidden = isDark;
+    document.getElementById('iconMoon').hidden = !isDark;
+    document.getElementById('themeToggleBtn').setAttribute('aria-pressed', String(isDark));
+  }
+  function applyTheme(isDark) {
+    document.documentElement.classList.toggle('dark', isDark);
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    syncThemeIcons();
+  }
+
+  // ---------- Tools registry ----------
+  var TOOLS_REGISTRY = [
+    {
+      id: 'atkinson',
+      title: 'Atkinson Cycle Visualiser',
+      description: 'Animated P&ndash;V diagram and piston model of the Atkinson thermodynamic cycle.',
+      icon: '<svg width="22" height="18" viewBox="0 0 32 24" fill="none" style="stroke:var(--accent);" stroke-width="2"><path d="M2 20 C4 8 8 4 8 4 L8 20 C14 20 18 12 28 8" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
+      viewId: 'view-atkinson',
+      mount: mountAtkinsonTool,
+      unmount: unmountAtkinsonTool
+    }
+  ];
+
+  function buildHomeGrid() {
+    var grid = document.getElementById('toolCardGrid');
+    var cards = TOOLS_REGISTRY.map(function (tool, i) {
+      var num = String(i + 1).padStart(2, '0');
+      return (
+        '<a href="#' + tool.id + '" class="relative flex flex-col gap-4 p-6 border" style="background-color:var(--surface);border-color:var(--border);">' +
+          '<span class="absolute w-3.5 h-3.5" style="top:-1px;left:-1px;border-top:2px solid var(--accent);border-left:2px solid var(--accent);"></span>' +
+          '<span class="absolute w-3.5 h-3.5" style="top:-1px;right:-1px;border-top:2px solid var(--accent);border-right:2px solid var(--accent);"></span>' +
+          '<span class="absolute w-3.5 h-3.5" style="bottom:-1px;left:-1px;border-bottom:2px solid var(--accent);border-left:2px solid var(--accent);"></span>' +
+          '<span class="absolute w-3.5 h-3.5" style="bottom:-1px;right:-1px;border-bottom:2px solid var(--accent);border-right:2px solid var(--accent);"></span>' +
+          '<div class="flex items-center justify-between">' +
+            '<span class="font-brand text-xs tracking-widest" style="color:var(--text-muted);">TOOL &mdash; ' + num + '</span>' +
+            tool.icon +
+          '</div>' +
+          '<div class="text-lg font-semibold">' + tool.title + '</div>' +
+          '<div class="text-sm flex-grow" style="color:var(--text-muted);">' + tool.description + '</div>' +
+          '<div class="font-brand text-xs" style="color:var(--accent);">Open &rarr;</div>' +
+        '</a>'
+      );
+    }).join('');
+    grid.innerHTML = cards +
+      '<div class="flex flex-col items-center justify-center gap-2 p-6 border border-dashed" style="border-color:var(--border);color:var(--text-muted);">' +
+        '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>' +
+        '<div class="font-brand text-xs">More tools coming soon</div>' +
+      '</div>';
+  }
+
+  // ---------- Router ----------
+  var activeTool = null;
+  function getToolFromHash() {
+    var id = decodeURIComponent(location.hash.replace(/^#/, ''));
+    return TOOLS_REGISTRY.find(function (t) { return t.id === id; }) || null;
+  }
+  function renderRoute() {
+    document.querySelectorAll('[data-view]').forEach(function (el) { el.hidden = true; });
+    var tool = getToolFromHash();
+    if (!tool) {
+      document.getElementById('view-home').hidden = false;
+      if (activeTool && activeTool.unmount) activeTool.unmount();
+      activeTool = null;
+      document.title = 'SCHEMA/ — Tools Portal';
+      return;
+    }
+    document.getElementById(tool.viewId).hidden = false;
+    document.title = tool.title + ' · SCHEMA/';
+    if (activeTool && activeTool !== tool && activeTool.unmount) activeTool.unmount();
+    tool.mount();
+    activeTool = tool;
+  }
+
+  // ---------- Atkinson cycle math (air-standard idealization) ----------
+  var AtkinsonCycle = (function () {
+    var GAMMA = 1.4, P1 = 100, T1 = 300, V1 = 1.0, T3_PEAK = 2200;
+
+    function computeCorners(rc, re) {
+      re = Math.max(re, rc);
+      var V2 = V1 / rc;
+      var T2 = T1 * Math.pow(rc, GAMMA - 1);
+      var P2 = P1 * Math.pow(rc, GAMMA);
+      var V3 = V2, T3 = T3_PEAK;
+      var P3 = P2 * (T3 / T2);
+      var V4 = V3 * re;
+      var P4 = P3 / Math.pow(re, GAMMA);
+      return { V1: V1, P1: P1, V2: V2, P2: P2, V3: V3, P3: P3, V4: V4, P4: P4 };
+    }
+
+    function buildPath(rc, re, pointsPerLeg) {
+      pointsPerLeg = pointsPerLeg || 40;
+      var c = computeCorners(rc, re);
+      var pts = [];
+      function lerp(a, b, t) { return a + (b - a) * t; }
+
+      // 1 -> 2: isentropic compression, P = P1 * (V1/V)^GAMMA
+      for (var i = 0; i <= pointsPerLeg; i++) {
+        var v = lerp(c.V1, c.V2, i / pointsPerLeg);
+        pts.push({ V: v, P: c.P1 * Math.pow(c.V1 / v, GAMMA), stroke: 'compression' });
+      }
+      // 2 -> 3: constant-volume heat addition
+      for (var i = 1; i <= pointsPerLeg; i++) {
+        pts.push({ V: c.V2, P: lerp(c.P2, c.P3, i / pointsPerLeg), stroke: 'combustion' });
+      }
+      // 3 -> 4: isentropic expansion, P = P3 * (V3/V)^GAMMA
+      for (var i = 1; i <= pointsPerLeg; i++) {
+        var v = lerp(c.V3, c.V4, i / pointsPerLeg);
+        pts.push({ V: v, P: c.P3 * Math.pow(c.V3 / v, GAMMA), stroke: 'power' });
+      }
+      // 4 -> 4a: isochoric blowdown back down to P1
+      for (var i = 1; i <= pointsPerLeg; i++) {
+        pts.push({ V: c.V4, P: lerp(c.P4, c.P1, i / pointsPerLeg), stroke: 'exhaust' });
+      }
+      // 4a -> 1: isobaric return to V1
+      for (var i = 1; i <= pointsPerLeg; i++) {
+        pts.push({ V: lerp(c.V4, c.V1, i / pointsPerLeg), P: c.P1, stroke: 'exhaust' });
+      }
+      return pts;
+    }
+
+    return { buildPath: buildPath };
+  })();
+
+  // ---------- Atkinson tool view ----------
+  var AtkinsonView = {
+    initialized: false,
+    rafId: null,
+    playing: true,
+    lastTimestamp: 0,
+    speed: 40, // path points advanced per second
+    cursor: 0,
+    path: []
+  };
+
+  function themeVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+  function currentThemeColors() {
+    return {
+      border: themeVar('--border'),
+      text: themeVar('--text'),
+      textMuted: themeVar('--text-muted'),
+      accent: themeVar('--accent'),
+      accent2: themeVar('--accent-2')
+    };
+  }
+
+  function resizeCanvases() {
+    [AtkinsonView.pvCanvas, AtkinsonView.pistonCanvas].forEach(function (canvas) {
+      var dpr = window.devicePixelRatio || 1;
+      var rect = canvas.getBoundingClientRect();
+      canvas.width = Math.max(1, Math.round(rect.width * dpr));
+      canvas.height = Math.max(1, Math.round(rect.height * dpr));
+    });
+  }
+
+  var PV_W = 320, PV_H = 220;
+  function drawPV(colors) {
+    var canvas = AtkinsonView.pvCanvas, ctx = AtkinsonView.pvCtx, path = AtkinsonView.path;
+    if (!path.length) return;
+    ctx.setTransform(canvas.width / PV_W, 0, 0, canvas.height / PV_H, 0, 0);
+    ctx.clearRect(0, 0, PV_W, PV_H);
+
+    var maxV = 0, maxP = 0;
+    for (var i = 0; i < path.length; i++) { if (path[i].V > maxV) maxV = path[i].V; if (path[i].P > maxP) maxP = path[i].P; }
+    maxV *= 1.08; maxP *= 1.08;
+    var left = 34, right = 306, top = 14, bottom = 192;
+    function toXY(p) { return [left + (p.V / maxV) * (right - left), bottom - (p.P / maxP) * (bottom - top)]; }
+
+    ctx.strokeStyle = colors.border; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(left, top); ctx.lineTo(left, bottom); ctx.lineTo(right, bottom); ctx.stroke();
+    ctx.fillStyle = colors.textMuted;
+    ctx.font = "11px 'IBM Plex Mono', monospace";
+    ctx.fillText('P', left - 20, top + 10);
+    ctx.fillText('V', right - 8, bottom + 16);
+
+    ctx.strokeStyle = colors.border; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    path.forEach(function (pt, i) { var xy = toXY(pt); if (i === 0) ctx.moveTo(xy[0], xy[1]); else ctx.lineTo(xy[0], xy[1]); });
+    ctx.stroke();
+
+    var cursorIndex = Math.min(path.length - 1, Math.floor(AtkinsonView.cursor));
+    ctx.strokeStyle = colors.accent2; ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (var i = 0; i <= cursorIndex; i++) { var xy = toXY(path[i]); if (i === 0) ctx.moveTo(xy[0], xy[1]); else ctx.lineTo(xy[0], xy[1]); }
+    ctx.stroke();
+
+    var cur = toXY(path[cursorIndex]);
+    ctx.fillStyle = colors.accent;
+    ctx.beginPath(); ctx.arc(cur[0], cur[1], 4.5, 0, Math.PI * 2); ctx.fill();
+  }
+
+  var PISTON_W = 300, PISTON_H = 160;
+  var CRANK_CX = 250, CRANK_CY = 60, CRANK_R = 28, ROD_L = 70;
+  function drawPiston(colors) {
+    var canvas = AtkinsonView.pistonCanvas, ctx = AtkinsonView.pistonCtx, path = AtkinsonView.path;
+    if (!path.length) return;
+    ctx.setTransform(canvas.width / PISTON_W, 0, 0, canvas.height / PISTON_H, 0, 0);
+    ctx.clearRect(0, 0, PISTON_W, PISTON_H);
+
+    // Crank angle is driven by the shared animation cursor (one full turn per lap of the
+    // P-V loop) rather than by the instantaneous volume, since the idealized cycle's volume
+    // isn't a monotonic function of crank angle — this keeps the rotation smooth and the rod
+    // geometrically rigid instead of chasing an unstable inverse.
+    var theta = 2 * Math.PI * (AtkinsonView.cursor / path.length);
+    var pinX = CRANK_CX + CRANK_R * Math.cos(theta);
+    var pinY = CRANK_CY + CRANK_R * Math.sin(theta);
+    var pistonX = CRANK_CX + CRANK_R * Math.cos(theta) - Math.sqrt(ROD_L * ROD_L - Math.pow(CRANK_R * Math.sin(theta), 2));
+
+    ctx.strokeStyle = colors.border; ctx.lineWidth = 2;
+    ctx.strokeRect(20, 30, 180, 60);
+    ctx.fillStyle = colors.accent;
+    ctx.fillRect(pistonX - 13, 34, 26, 52);
+
+    ctx.strokeStyle = colors.textMuted; ctx.lineWidth = 3; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(pistonX, CRANK_CY); ctx.lineTo(pinX, pinY); ctx.stroke();
+
+    ctx.strokeStyle = colors.border; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(CRANK_CX, CRANK_CY, CRANK_R + 6, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = colors.accent;
+    ctx.beginPath(); ctx.arc(pinX, pinY, 6, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = colors.textMuted;
+    ctx.beginPath(); ctx.arc(CRANK_CX, CRANK_CY, 4, 0, Math.PI * 2); ctx.fill();
+  }
+
+  function frame(ts) {
+    if (!AtkinsonView.lastTimestamp) AtkinsonView.lastTimestamp = ts;
+    var dt = (ts - AtkinsonView.lastTimestamp) / 1000;
+    AtkinsonView.lastTimestamp = ts;
+    if (AtkinsonView.playing && AtkinsonView.path.length) {
+      AtkinsonView.cursor += AtkinsonView.speed * dt;
+      if (AtkinsonView.cursor >= AtkinsonView.path.length) AtkinsonView.cursor -= AtkinsonView.path.length;
+    }
+    var colors = currentThemeColors();
+    drawPV(colors);
+    drawPiston(colors);
+    AtkinsonView.rafId = requestAnimationFrame(frame);
+  }
+
+  function updatePlayPauseUI() {
+    AtkinsonView.iconPlay.hidden = AtkinsonView.playing;
+    AtkinsonView.iconPause.hidden = !AtkinsonView.playing;
+    AtkinsonView.playPauseLabel.textContent = AtkinsonView.playing ? 'PLAYING' : 'PAUSED';
+    AtkinsonView.playPauseBtn.setAttribute('aria-pressed', String(AtkinsonView.playing));
+  }
+
+  function onSlidersChanged() {
+    var rc = Number(AtkinsonView.rcSlider.value);
+    AtkinsonView.reSlider.min = String(rc);
+    var re = Number(AtkinsonView.reSlider.value);
+    if (re < rc) { re = rc; AtkinsonView.reSlider.value = String(re); }
+    AtkinsonView.rcValue.textContent = rc.toFixed(1);
+    AtkinsonView.reValue.textContent = re.toFixed(1);
+    AtkinsonView.path = AtkinsonCycle.buildPath(rc, re);
+    AtkinsonView.cursor = 0;
+  }
+
+  function prefersReducedMotion() {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  function mountAtkinsonTool() {
+    if (!AtkinsonView.initialized) {
+      AtkinsonView.pvCanvas = document.getElementById('pvCanvas');
+      AtkinsonView.pvCtx = AtkinsonView.pvCanvas.getContext('2d');
+      AtkinsonView.pistonCanvas = document.getElementById('pistonCanvas');
+      AtkinsonView.pistonCtx = AtkinsonView.pistonCanvas.getContext('2d');
+      AtkinsonView.rcSlider = document.getElementById('rcSlider');
+      AtkinsonView.reSlider = document.getElementById('reSlider');
+      AtkinsonView.rcValue = document.getElementById('rcValue');
+      AtkinsonView.reValue = document.getElementById('reValue');
+      AtkinsonView.playPauseBtn = document.getElementById('playPauseBtn');
+      AtkinsonView.iconPlay = document.getElementById('iconPlay');
+      AtkinsonView.iconPause = document.getElementById('iconPause');
+      AtkinsonView.playPauseLabel = document.getElementById('playPauseLabel');
+
+      AtkinsonView.rcSlider.addEventListener('input', onSlidersChanged);
+      AtkinsonView.reSlider.addEventListener('input', onSlidersChanged);
+      AtkinsonView.playPauseBtn.addEventListener('click', function () {
+        AtkinsonView.playing = !AtkinsonView.playing;
+        updatePlayPauseUI();
+      });
+      window.addEventListener('resize', function () {
+        if (AtkinsonView.rafId) resizeCanvases();
+      });
+      AtkinsonView.initialized = true;
+    }
+
+    resizeCanvases();
+    onSlidersChanged();
+    AtkinsonView.playing = !prefersReducedMotion();
+    updatePlayPauseUI();
+    AtkinsonView.lastTimestamp = 0;
+    AtkinsonView.rafId = requestAnimationFrame(frame);
+  }
+
+  function unmountAtkinsonTool() {
+    if (AtkinsonView.rafId) cancelAnimationFrame(AtkinsonView.rafId);
+    AtkinsonView.rafId = null;
+  }
+
+  // ---------- Bootstrap ----------
+  document.addEventListener('DOMContentLoaded', function () {
+    buildHomeGrid();
+    syncThemeIcons();
+    document.getElementById('themeToggleBtn').addEventListener('click', function () {
+      applyTheme(!document.documentElement.classList.contains('dark'));
+    });
+    window.addEventListener('hashchange', renderRoute);
+    renderRoute();
+  });
+</script>
+
+</body>
+</html>
