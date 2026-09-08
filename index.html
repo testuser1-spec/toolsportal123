@@ -156,6 +156,28 @@
       </div>
     </section>
 
+    <section id="view-placeholder-a" data-view hidden class="pb-4">
+      <a href="#" class="font-brand text-xs" style="color: var(--text-muted);">&larr; All tools</a>
+      <h1 class="text-2xl sm:text-3xl font-semibold mt-3">Placeholder Tool A</h1>
+      <div class="font-brand text-xs tracking-widest uppercase mt-2 mb-6" style="color: var(--accent);">Slot 02 / Stand-in</div>
+      <div class="p-6 border" style="background-color: var(--surface); border-color: var(--border);">
+        <p class="text-sm leading-relaxed max-w-2xl" style="color: var(--text-muted);">
+          This is a placeholder view. It exists to prove that the tools registry and hash router can mount and unmount more than one tool &mdash; no real functionality lives here yet. Real tool content will replace this panel in a later phase.
+        </p>
+      </div>
+    </section>
+
+    <section id="view-placeholder-b" data-view hidden class="pb-4">
+      <a href="#" class="font-brand text-xs" style="color: var(--text-muted);">&larr; All tools</a>
+      <h1 class="text-2xl sm:text-3xl font-semibold mt-3">Placeholder Tool B</h1>
+      <div class="font-brand text-xs tracking-widest uppercase mt-2 mb-6" style="color: var(--accent);">Slot 03 / Stand-in</div>
+      <div class="p-6 border" style="background-color: var(--surface); border-color: var(--border);">
+        <p class="text-sm leading-relaxed max-w-2xl" style="color: var(--text-muted);">
+          This is a placeholder view. It exists to prove that the tools registry and hash router can mount and unmount more than one tool &mdash; no real functionality lives here yet. Real tool content will replace this panel in a later phase.
+        </p>
+      </div>
+    </section>
+
   </main>
 
   <footer class="px-6 sm:px-12 py-5 border-t font-brand text-xs tracking-wide" style="border-color: var(--border); color: var(--text-muted);">
@@ -177,6 +199,9 @@
   }
 
   // ---------- Tools registry ----------
+  function noop() {}
+  var PLACEHOLDER_ICON = '<svg width="22" height="18" viewBox="0 0 32 24" fill="none" style="stroke:var(--accent);" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="12" r="1.6" fill="var(--accent)" stroke="none"></circle><circle cx="16" cy="12" r="1.6" fill="var(--accent)" stroke="none"></circle><circle cx="24" cy="12" r="1.6" fill="var(--accent)" stroke="none"></circle></svg>';
+
   var TOOLS_REGISTRY = [
     {
       id: 'atkinson',
@@ -186,6 +211,24 @@
       viewId: 'view-atkinson',
       mount: mountAtkinsonTool,
       unmount: unmountAtkinsonTool
+    },
+    {
+      id: 'placeholder-a',
+      title: 'Placeholder Tool A',
+      description: 'Stand-in view &mdash; proves the tools registry and router before real content lands here.',
+      icon: PLACEHOLDER_ICON,
+      viewId: 'view-placeholder-a',
+      mount: noop,
+      unmount: noop
+    },
+    {
+      id: 'placeholder-b',
+      title: 'Placeholder Tool B',
+      description: 'Stand-in view &mdash; proves the tools registry and router before real content lands here.',
+      icon: PLACEHOLDER_ICON,
+      viewId: 'view-placeholder-b',
+      mount: noop,
+      unmount: noop
     }
   ];
 

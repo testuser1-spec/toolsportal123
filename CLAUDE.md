@@ -35,6 +35,7 @@ This project has two hard constraints that must never be violated:
   - Auto-play on entering the tool, with a play/pause control
   - Canvas colors follow the current theme
   - Short explanatory write-up: the 4 strokes, why higher expansion than compression improves efficiency, contrast with the Otto cycle
+- [x] Registry proven with more than one tool: two placeholder entries (`placeholder-a`, `placeholder-b`, no-op mount/unmount) added alongside the Atkinson tool — cards render, and the router opens/closes each one correctly, confirming the pattern scales before any second real tool is built
 
 ### Data model
 - `TOOLS_REGISTRY`: `{ id, title, description, icon, viewId, mount, unmount }[]` — one entry per tool; grows over time, nothing else changes when a tool is added
